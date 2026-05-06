@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TrackWise — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #050810;
+      --surface: #0d1117;
+      --card: #111827;
+      --border: rgba(99,102,241,0.2);
+      --accent: #6366f1;
+      --accent2: #818cf8;
+      --accent3: #c7d2fe;
+      --text: #f1f5f9;
+      --muted: #64748b;
+      --success: #10b981;
+      --error: #ef4444;
+      --glow: 0 0 40px rgba(99,102,241,0.3);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    /* Animated Background */
+    .bg-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: drift 12s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 600px; height: 600px; background: #6366f1; top: -200px; left: -200px; animation-delay: 0s; }
+    .orb-2 { width: 400px; height: 400px; background: #818cf8; bottom: -100px; right: -100px; animation-delay: -4s; }
+    .orb-3 { width: 300px; height: 300px; background: #c7d2fe; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: -8s; }
+
+    @keyframes drift {
+      from { transform: translate(0,0) scale(1); }
+      to { transform: translate(40px, 30px) scale(1.05); }
+    }
+
+    /* Grid overlay */
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: 0;
+    }
+
+    /* Floating particles */
+    .particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .particle {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: float-up linear infinite;
+      opacity: 0;
+    }
+    @keyframes float-up {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.3; }
+      100% { transform: translateY(-20px) scale(1.5); opacity: 0; }
+    }
+
+    /* Layout */
+    .split { display: flex; width: 100%; min-height: 100vh; position: relative; z-index: 1; }
+
+    /* Left Panel */
+    .left-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 80px;
+      position: relative;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 60px;
+    }
+    .brand-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      box-shadow: var(--glow);
+    }
+    .brand-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #fff, var(--accent3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-text {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+    }
+    .hero-text .line-accent {
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: block;
+    }
+    .hero-sub {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 380px;
+      margin-bottom: 48px;
+    }
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 14px;
+      animation: slide-in 0.6s ease both;
+    }
+    .feature-item:nth-child(1) { animation-delay: 0.1s; }
+    .feature-item:nth-child(2) { animation-delay: 0.2s; }
+    .feature-item:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes slide-in {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .feature-dot {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* Right Panel */
+    .right-panel {
+      width: 480px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 48px;
+      background: rgba(13,17,23,0.8);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid var(--border);
+      position: relative;
+    }
+
+    .auth-card { width: 100%; }
+
+    .tab-switcher {
+      display: flex;
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 36px;
+      border: 1px solid var(--border);
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(99,102,241,0.4);
+    }
+
+    .form-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+    .form-subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 28px;
+    }
+
+    .form-group { margin-bottom: 18px; }
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+    .input-wrap { position: relative; }
+    .input-icon {
+      position: absolute;
+      left: 14px; top: 50%; transform: translateY(-50%);
+      font-size: 16px;
+      color: var(--muted);
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px 14px 12px 42px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      border-color: var(--accent);
+      background: rgba(99,102,241,0.06);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+    }
+    .form-input:focus + .input-icon,
+    .input-wrap:focus-within .input-icon { color: var(--accent); }
+    .form-input::placeholder { color: var(--muted); opacity: 0.6; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .password-toggle {
+      position: absolute;
+      right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; border: none;
+      color: var(--muted); cursor: pointer;
+      font-size: 16px; padding: 0;
+      transition: color 0.2s;
+    }
+    .password-toggle:hover { color: var(--accent); }
+
+    .strength-bar {
+      height: 3px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+      display: none;
+    }
+    .strength-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.4s ease, background 0.4s ease;
+      width: 0%;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent, rgba(255,255,255,0.15), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+    }
+    .submit-btn:hover::before { transform: translateX(100%); }
+    .submit-btn:hover { box-shadow: 0 8px 30px rgba(99,102,241,0.5); transform: translateY(-1px); }
+    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+      animation: fade-in 0.3s ease;
+    }
+    @keyframes fade-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+    .alert.error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
+    .alert.success { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: #6ee7b7; }
+    .alert.show { display: block; }
+
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      color: var(--muted); font-size: 12px;
+      margin: 20px 0;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1;
+      height: 1px; background: var(--border);
+    }
+
+    .live-indicator {
+      position: absolute;
+      top: 24px; right: 24px;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; color: var(--success);
+      background: rgba(16,185,129,0.1);
+      border: 1px solid rgba(16,185,129,0.2);
+      padding: 4px 10px; border-radius: 20px;
+    }
+    .live-dot {
+      width: 6px; height: 6px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.7; }
+    }
+
+    /* Spinner */
+    .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Form animation */
+    .form-panel { transition: all 0.3s ease; }
+    .form-panel.hidden { display: none; }
+
+    @media (max-width: 900px) {
+      .left-panel { display: none; }
+      .right-panel { width: 100%; border-left: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-scene">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="grid-overlay"></div>
+  <div class="particles" id="particles"></div>
+
+  <div class="split">
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+      <div class="brand">
+        <div class="brand-icon">⚡</div>
+        <span class="brand-name">TrackWise</span>
+      </div>
+      <h1 class="hero-text">
+        Real-Time Events,
+        <span class="line-accent">Perfectly Synced.</span>
+      </h1>
+      <p class="hero-sub">
+        A powerful synchronization engine that keeps your team aligned across every event, every update, in real time.
+      </p>
+      <div class="features">
+        <div class="feature-item"><span class="feature-dot"></span> Live event broadcasting with WebSockets</div>
+        <div class="feature-item"><span class="feature-dot"></span> Multi-user credential-based workspace</div>
+        <div class="feature-item"><span class="feature-dot"></span> Priority tracking & smart categorization</div>
+        <div class="feature-item"><span class="feature-dot"></span> Instant sync across all connected clients</div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+      <div class="live-indicator">
+        <span class="live-dot"></span> LIVE SYSTEM
+      </div>
+
+      <div class="auth-card">
+        <div class="tab-switcher">
+          <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+          <button class="tab-btn" onclick="switchTab('register')">Create Account</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div class="form-panel" id="login-panel">
+          <h2 class="form-title">Welcome back</h2>
+          <p class="form-subtitle">Sign in to your TrackWise workspace</p>
+
+          <div class="alert" id="login-alert"></div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <div class="input-wrap">
+              <input type="email" class="form-input" id="login-email" placeholder="you@example.com" autocomplete="email"/>
+              <span class="input-icon">✉</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="input-wrap">
+              <input type="password" class="form-input" id="login-password" placeholder="Enter your password" autocomplete="current-password"/>
+              <span class="input-icon">🔒</span>
+              <button class="password-toggle" onclick="togglePwd('login-password', this)" type="button">👁</button>
+            </div>
+          </div>
+
+          <button class="submit-btn" onclick="handleLogin()" id="login-btn">Sign In to TrackWise</button>
+
+          <div class="divider">or</div>
+          <p style="text-align:center; color:var(--muted); font-size:13px;">
+            No account? <a href="#" onclick="switchTab('register')" style="color:var(--accent2); text-decoration:none; font-weight:500;">Create one free →</a>
+          </p>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div class="form-panel hidden" id="register-panel">
+          <h2 class="form-title">Join TrackWise</h2>
+          <p class="form-subtitle">Create your account in seconds</p>
+
+          <div class="alert" id="register-alert"></div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <div class="input-wrap">
+                <input type="text" class="form-input" id="reg-fullname" placeholder="John Doe"/>
+                <span class="input-icon">👤</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Username</label>
+              <div class="input-wrap">
+                <input type="text" class="form-input" id="reg-username" placeholder="john_doe"/>
+                <span class="input-icon">@</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <div class="input-wrap">
+              <input type="email" class="form-input" id="reg-email" placeholder="you@example.com"/>
+              <span class="input-icon">✉</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="input-wrap">
+              <input type="password" class="form-input" id="reg-password" placeholder="Min. 6 characters" oninput="checkStrength(this.value)"/>
+              <span class="input-icon">🔒</span>
+              <button class="password-toggle" onclick="togglePwd('reg-password', this)" type="button">👁</button>
+            </div>
+            <div class="strength-bar" id="strength-bar">
+              <div class="strength-fill" id="strength-fill"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <div class="input-wrap">
+              <input type="password" class="form-input" id="reg-confirm" placeholder="Re-enter password"/>
+              <span class="input-icon">🔐</span>
+            </div>
+          </div>
+
+          <button class="submit-btn" onclick="handleRegister()" id="register-btn">Create My Account</button>
+
+          <div class="divider">or</div>
+          <p style="text-align:center; color:var(--muted); font-size:13px;">
+            Have an account? <a href="#" onclick="switchTab('login')" style="color:var(--accent2); text-decoration:none; font-weight:500;">Sign in →</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check if already logged in
+    if (localStorage.getItem('tw_token')) {
+      window.location.href = '/app.html';
+    }
+
+    // Generate particles
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.cssText = `
+        left: ${Math.random()*100}%;
+        animation-duration: ${8 + Math.random()*10}s;
+        animation-delay: ${-Math.random()*15}s;
+        width: ${1 + Math.random()*2}px;
+        height: ${1 + Math.random()*2}px;
+        opacity: ${0.3 + Math.random()*0.4};
+      `;
+      container.appendChild(p);
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach((b,i) => {
+        b.classList.toggle('active', (tab === 'login' && i===0) || (tab==='register' && i===1));
+      });
+      document.getElementById('login-panel').classList.toggle('hidden', tab !== 'login');
+      document.getElementById('register-panel').classList.toggle('hidden', tab !== 'register');
+    }
+
+    function togglePwd(id, btn) {
+      const input = document.getElementById(id);
+      input.type = input.type === 'password' ? 'text' : 'password';
+      btn.textContent = input.type === 'password' ? '👁' : '🙈';
+    }
+
+    function checkStrength(val) {
+      const bar = document.getElementById('strength-bar');
+      const fill = document.getElementById('strength-fill');
+      bar.style.display = 'block';
+      let score = 0;
+      if (val.length >= 6) score++;
+      if (val.length >= 10) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+      const pct = (score / 5) * 100;
+      const colors = ['#ef4444','#f97316','#eab308','#22c55e','#10b981'];
+      fill.style.width = pct + '%';
+      fill.style.background = colors[score-1] || '#ef4444';
+    }
+
+    function showAlert(id, msg, type) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.className = `alert ${type} show`;
+    }
+
+    function setLoading(btnId, loading) {
+      const btn = document.getElementById(btnId);
+      if (loading) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span>Processing...';
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = btnId === 'login-btn' ? 'Sign In to TrackWise' : 'Create My Account';
+      }
+    }
+
+    async function handleLogin() {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      if (!email || !password) return showAlert('login-alert', 'Please fill in all fields.', 'error');
+
+      setLoading('login-btn', true);
+      try {
+        const res = await fetch('/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) { showAlert('login-alert', data.error || 'Login failed.', 'error'); return; }
+        localStorage.setItem('tw_token', data.token);
+        localStorage.setItem('tw_user', JSON.stringify(data.user));
+        showAlert('login-alert', '✓ Login successful! Redirecting...', 'success');
+        setTimeout(() => window.location.href = '/app.html', 800);
+      } catch(e) {
+        showAlert('login-alert', 'Server error. Is the server running?', 'error');
+      } finally { setLoading('login-btn', false); }
+    }
+
+    async function handleRegister() {
+      const full_name = document.getElementById('reg-fullname').value.trim();
+      const username = document.getElementById('reg-username').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-password').value;
+      const confirm = document.getElementById('reg-confirm').value;
+
+      if (!full_name || !username || !email || !password) return showAlert('register-alert', 'All fields are required.', 'error');
+      
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) return showAlert('register-alert', 'Please enter a valid email address.', 'error');
+      
+      if (password.length < 6) return showAlert('register-alert', 'Password must be at least 6 characters.', 'error');
+      if (password !== confirm) return showAlert('register-alert', 'Passwords do not match.', 'error');
+
+      setLoading('register-btn', true);
+      try {
+        const res = await fetch('/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ full_name, username, email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) { showAlert('register-alert', data.error || 'Registration failed.', 'error'); return; }
+        localStorage.setItem('tw_token', data.token);
+        localStorage.setItem('tw_user', JSON.stringify(data.user));
+        showAlert('register-alert', '✓ Account created! Redirecting...', 'success');
+        setTimeout(() => window.location.href = '/app.html', 800);
+      } catch(e) {
+        showAlert('register-alert', 'Server error. Is the server running?', 'error');
+      } finally { setLoading('register-btn', false); }
+    }
+
+    // Enter key support
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const loginVisible = !document.getElementById('login-panel').classList.contains('hidden');
+        loginVisible ? handleLogin() : handleRegister();
+      }
+    });
+  </script>
+</body>
+</html>

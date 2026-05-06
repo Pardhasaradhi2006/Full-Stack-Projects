@@ -1,0 +1,20 @@
+.app-container { min-height: 100vh; display: flex; flex-direction: column; background: var(--background); }
+.header { text-align: center; margin-bottom: 3rem; padding: 1.5rem; background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); max-width: 800px; width: 100%; margin-left: auto; margin-right: auto; }
+.header h1 { font-size: 2.25rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem; }
+.header p { color: var(--text-muted); font-size: 1.1rem; }
+.main-content { display: flex; flex-direction: column; gap: 2rem; max-width: 1000px; width: 100%; margin: 0 auto; justify-content: center; padding: 2rem 1rem; }
+@media (min-width: 768px) { .main-content { flex-direction: row; align-items: flex-start; justify-content: center; } }
+.card { background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); padding: 2rem; flex: 1; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.section-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-main); border-bottom: 2px solid var(--background); padding-bottom: 0.75rem; }
+.detail-item { display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+.detail-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.detail-label { color: var(--text-muted); font-weight: 500; }
+.detail-value { font-weight: 600; text-align: right; }
+.tickets-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.875rem; }
+.form-group { margin-bottom: 1.5rem; }
+.form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-main); }
+.form-input { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 1rem; background-color: var(--surface); }
+.btn { width: 100%; padding: 0.875rem 1.5rem; border: none; border-radius: var(--radius-md); font-size: 1rem; font-weight: 600; text-align: center; }
+.btn-primary { background-color: var(--primary); color: white; }
+.btn-secondary { background-color: transparent; color: var(--text-main); border: 1px solid var(--border); }
